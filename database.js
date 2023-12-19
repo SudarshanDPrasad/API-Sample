@@ -4,10 +4,11 @@ import dotenv from 'dotenv'
 dotenv.config
 
 const pool = mysql.createPool({
-    host: 'mysql-21567144-userlogin.a.aivencloud.com:13073',
+    host: 'mysql-21567144-userlogin.a.aivencloud.com',
     user: 'avnadmin',
     password: 'AVNS_K6tzO3fGJFSSz0iKJsw',
-    database: 'defaultdb'
+    database: 'defaultdb',
+    port: 13073,
 }).promise()
 
 export async function getAllUsers() {
