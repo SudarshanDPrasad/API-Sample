@@ -11,20 +11,22 @@ const pool = mysql.createPool({
     port: 13073,
 }).promise()
 
+
+// Users
 export async function getAllUsers() {
     const result = await pool.query(`SELECT * FROM users.user`)
     return result
 }
 
-export async function queryUserName(username){
+export async function queryUserName(username) {
     const query = await
-    pool.query(`SELECT * FROM users.user WHERE username like '${username}'`)
+        pool.query(`SELECT * FROM users.user WHERE username like '${username}'`)
     return query[0];
 }
 
 export async function createUser(username, password) {
     const insert = await
-    pool.query(`INSERT INTO users.user(username , password) VALUES( ?,?)`, [username, password])
+        pool.query(`INSERT INTO users.user(username , password) VALUES( ?,?)`, [username, password])
     return {
         id: insert[0].insertId,
         username,
@@ -34,6 +36,55 @@ export async function createUser(username, password) {
 
 export async function deleteUser(username) {
     const deleteQuery = await
-    pool.query(`DELETE FROM users.user WHERE username = '${username}'`)
+        pool.query(`DELETE FROM users.user WHERE username = '${username}'`)
+    return deleteQuery
+}
+
+// Articles 
+export async function getAllArticles() {
+    const result = await pool.query(`SELECT * FROM users.articles`)
+    return result
+}
+
+export async function createUserArticle(
+    username,
+    author,
+    title,
+    urlToImage,
+    description,
+    url,
+    publishedAt,
+    content,
+    sourceName
+) {
+    const insert = await
+        pool.query(`INSERT INTO users.articles(
+            username , 
+            author,
+            title,
+            urlToImage,
+            description,
+            url,
+            publishedAt,
+            content,
+            sourceName
+            ) VALUES( ?,?,?,?,?,?,?,?,?)`, [username, author, title, urlToImage, description, url, publishedAt, content, sourceName])
+    return {
+        id: insert[0].insertId,
+        username,
+        author,
+        title,
+        urlToImage,
+        description,
+        url,
+        publishedAt,
+        content,
+        sourceName
+    }
+}
+
+export async function deleteArticle(title,username) {
+    const deleteQuery = await
+        pool.query(`DELETE FROM users.articles WHERE title = '${title}' AND username = '${username}'`)
     return deleteQuery
 }

@@ -1,18 +1,27 @@
 // Purpose: Entry point for the application
 import express from 'express'
-import { getAllUsers, createUser, queryUserName, deleteUser } from '../database.js'
+import {
+   getAllUsers,
+   createUser,
+   queryUserName,
+   deleteUser,
+   createUserArticle,
+   getAllArticles,
+   deleteArticle
+} from '../database.js'
 import Joi from 'joi'
 
 const app = express();
 
 app.use(express.json());
+
+// Users
 app.get("/users", async (req, res) => {
    const users = await getAllUsers()
    res.status(200).send(users[0])
 })
 
-
-app.post("/users", async (req, res) => {
+app.post("/newuser", async (req, res) => {
    const { username, password } = req.body;
    const usersList = await getAllUsers();
    const userExist = usersList[0].find(
@@ -36,13 +45,56 @@ app.post("/users", async (req, res) => {
 app.get("/users/:username", async (req, res) => {
    const username = req.params.username
    const users = await queryUserName(username)
-   res.status(200).send(users[0])
+   const articlesList = await getAllArticles();
+   const articleExist = []
+   articlesList[0].forEach((user) => {
+      if (user.username === username) {
+         articleExist.push(user)
+      }
+   })
+   res.status(200).send({
+      "users": users[0],
+      "total": articleExist
+   })
 });
 
-app.delete("/users/:username", async (req, res) => {
+app.delete("/user/:username", async (req, res) => {
    const username = req.params.username
    const users = await deleteUser(username)
    res.status(200).send(users[0])
+});
+
+// Articles
+app.get("/articles", async (req, res) => {
+   const articles = await getAllArticles()
+   if(articles[0].length === 0){
+      res.status(200).send({ "error": "sorry no articles" })
+   } else {
+   res.status(200).send(articles[0])
+   }
+})
+
+app.post("/newArticle", async (req, res) => {
+   const { username, author, title, urlToImage, description, url, publishedAt, content, sourceName } = req.body;
+   const articlesList = await getAllArticles();
+   const articleExist = []
+   articlesList[0].forEach((user) => {
+      if (user.username === username && user.title === title) {
+         articleExist.push(user)
+      }
+   })
+   if (articleExist.length > 0) {
+      res.status(401).send({ "error": "sorry article already exists" });
+   } else {
+      const article = await createUserArticle(username, author, title, urlToImage, description, url, publishedAt, content, sourceName)
+      res.status(201).send(article);
+   }
+});
+
+app.delete("/deleteArticle/", async (req, res) => {
+   const { title, username } = req.body;
+   const users = await deleteArticle(title,username)
+   res.status(200).send({ "message": "article deleted" })
 });
 
 const port = process.env.PORT || 5432
