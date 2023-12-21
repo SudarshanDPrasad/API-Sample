@@ -22,6 +22,7 @@ app.get("/users", async (req, res) => {
 })
 
 app.post("/newuser", async (req, res) => {
+   console.log(req.body)
    const { username, password } = req.body;
    const usersList = await getAllUsers();
    const userExist = usersList[0].find(
@@ -67,10 +68,10 @@ app.delete("/user/:username", async (req, res) => {
 // Articles
 app.get("/articles", async (req, res) => {
    const articles = await getAllArticles()
-   if(articles[0].length === 0){
+   if (articles[0].length === 0) {
       res.status(200).send({ "error": "sorry no articles" })
    } else {
-   res.status(200).send(articles[0])
+      res.status(200).send(articles[0])
    }
 })
 
@@ -93,7 +94,7 @@ app.post("/newArticle", async (req, res) => {
 
 app.delete("/deleteArticle/", async (req, res) => {
    const { title, username } = req.body;
-   const users = await deleteArticle(title,username)
+   const users = await deleteArticle(title, username)
    res.status(200).send({ "message": "article deleted" })
 });
 
