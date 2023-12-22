@@ -63,8 +63,8 @@ app.get("/searchuser", async (req, res) => {
    }
 });
 
-app.delete("/user/:username", async (req, res) => {
-   const username = req.params.username
+app.delete("/deleteuser", async (req, res) => {
+   const username = req.query.username
    const users = await deleteUser(username)
    res.status(200).send(users[0])
 });
