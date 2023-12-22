@@ -44,8 +44,8 @@ app.post("/newuser", async (req, res) => {
 });
 
 app.get("/searchuser", async (req, res) => {
-   const username = req.query.username
-   const users = await queryUserName(username)
+   const { username, password } = req.query;
+   const users = await queryUserName(username,password)
    const articlesList = await getAllArticles();
    const articleExist = []
    articlesList[0].forEach((user) => {
@@ -54,7 +54,7 @@ app.get("/searchuser", async (req, res) => {
       }
    })
    if (users.length === 0) {
-      res.status(200).send({ "error": "sorry no user" })
+      res.status(200).send({ "error": "Please check the credientals" })
    } else {
       res.status(200).send({
          "user": users[0],
@@ -98,12 +98,8 @@ app.post("/newArticle", async (req, res) => {
 
 app.delete("/deleteArticle", async (req, res) => {
    const { title, username } = req.query;
-   console.log(req.query)
    const users = await deleteArticle(title, username)
    res.status(200).send({ "message": "article deleted" })
-   // const { title, username } = req.body;
-   // const users = await deleteArticle(title, username)
-   // res.status(200).send({ "message": "article deleted" })
 });
 
 const port = process.env.PORT || 5432

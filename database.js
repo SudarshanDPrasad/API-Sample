@@ -18,9 +18,9 @@ export async function getAllUsers() {
     return result
 }
 
-export async function queryUserName(username) {
+export async function queryUserName(username,password) {
     const query = await
-        pool.query(`SELECT * FROM users.user WHERE username like '${username}'`)
+        pool.query(`SELECT * FROM users.user WHERE username like '${username}' AND password like '${password}'`)
     return query[0];
 }
 
