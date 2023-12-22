@@ -39,12 +39,12 @@ app.post("/newuser", async (req, res) => {
       res.status(401).send({ "error": "sorry user already exists" });
    } else {
       const users = await createUser(username, password)
-      res.status(201).send(users);
+      res.status(200).send(users);
    }
 });
 
-app.get("/users/:username", async (req, res) => {
-   const username = req.params.username
+app.get("/searchuser", async (req, res) => {
+   const username = req.query.username
    const users = await queryUserName(username)
    const articlesList = await getAllArticles();
    const articleExist = []
@@ -53,10 +53,14 @@ app.get("/users/:username", async (req, res) => {
          articleExist.push(user)
       }
    })
-   res.status(200).send({
-      "users": users[0],
-      "total": articleExist
-   })
+   if (users.length === 0) {
+      res.status(200).send({ "error": "sorry no user" })
+   } else {
+      res.status(200).send({
+         "user": users[0],
+         "articles": articleExist
+      })
+   }
 });
 
 app.delete("/user/:username", async (req, res) => {
@@ -88,7 +92,7 @@ app.post("/newArticle", async (req, res) => {
       res.status(401).send({ "error": "sorry article already exists" });
    } else {
       const article = await createUserArticle(username, author, title, urlToImage, description, url, publishedAt, content, sourceName)
-      res.status(201).send(article);
+      res.status(200).send(article);
    }
 });
 
