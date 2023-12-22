@@ -96,10 +96,14 @@ app.post("/newArticle", async (req, res) => {
    }
 });
 
-app.delete("/deleteArticle/", async (req, res) => {
-   const { title, username } = req.body;
+app.delete("/deleteArticle", async (req, res) => {
+   const { title, username } = req.query;
+   console.log(req.query)
    const users = await deleteArticle(title, username)
    res.status(200).send({ "message": "article deleted" })
+   // const { title, username } = req.body;
+   // const users = await deleteArticle(title, username)
+   // res.status(200).send({ "message": "article deleted" })
 });
 
 const port = process.env.PORT || 5432
