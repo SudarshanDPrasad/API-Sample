@@ -83,8 +83,8 @@ export async function createUserArticle(
     }
 }
 
-export async function deleteArticle(title,username) {
+export async function deleteArticle(id,username) {
     const deleteQuery = await
-        pool.query(`DELETE FROM users.articles WHERE title = '${title}' AND username = '${username}'`)
+        pool.query(`DELETE FROM users.articles WHERE id = '${id}' AND username = '${username}'`)
     return deleteQuery
 }

@@ -97,8 +97,9 @@ app.post("/newArticle", async (req, res) => {
 });
 
 app.delete("/deleteArticle", async (req, res) => {
-   const { title, username } = req.body;
-   const users = await deleteArticle(title, username)
+   const { id, username } = req.body;
+   console.log(req.body)
+   const users = await deleteArticle(id, username)
    res.status(200).send({ "message": "article deleted" })
 });
 
